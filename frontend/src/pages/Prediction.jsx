@@ -1,90 +1,49 @@
-function Prediction(){
+import { useEffect, useState } from "react";
+import { getPrediction } from "../api/api";
 
-return(
+function Prediction() {
+  const [prediction, setPrediction] = useState(null);
 
-<div className="container">
+  useEffect(() => {
+    async function loadPrediction() {
+      const data = await getPrediction();
+      setPrediction(data);
+    }
 
-<h1>
-🤖 AI Predictive Analysis
-</h1>
+    loadPrediction();
+  }, []);
 
+  if (!prediction) {
+    return <h2>Loading prediction...</h2>;
+  }
 
-<div className="card">
+  return (
+    <div className="container">
+      <h1>🤖 AI Predictive Analysis</h1>
 
-<h2>
-Machine: CNC-001
-</h2>
+      <div className="card">
+        <h2>Machine: CNC-001</h2>
 
+        <p>
+          <b>Health Score:</b> {prediction.health_score}%
+        </p>
 
-<p>
-<b>Health Score:</b> 92%
-</p>
+        <p>
+          <b>Failure Probability:</b>{" "}
+          {(prediction.failure_probability * 100).toFixed(0)}%
+        </p>
 
+        <p>
+          <b>Maintenance Required:</b>{" "}
+          {prediction.maintenance_required ? "Yes" : "No"}
+        </p>
 
-<p>
-<b>Failure Probability:</b> 8%
-</p>
-
-
-<p>
-<b>Prediction Status:</b> Normal Operation
-</p>
-
-
-<p>
-<b>Bearing Condition:</b> Healthy
-</p>
-
-
-<p>
-<b>Motor Condition:</b> Good
-</p>
-
-
-<p>
-<b>Temperature Analysis:</b> Within Safe Range
-</p>
-
-
-<p>
-<b>Vibration Analysis:</b> Stable
-</p>
-
-
-<p>
-<b>RPM Analysis:</b> Normal Speed
-</p>
-
-
-<p>
-<b>AI Confidence:</b> 94%
-</p>
-
-
-<p>
-<b>Remaining Useful Life (RUL):</b> 45 Days
-</p>
-
-
-<p>
-<b>Maintenance Prediction:</b> Preventive maintenance recommended
-</p>
-
-
-<p>
-<b>Recommendation:</b>
-Inspect bearing after 30 days
-</p>
-
-
-</div>
-
-
-</div>
-
-)
-
+        <p>
+          <b>Recommendation:</b> {prediction.recommendation}
+        </p>
+      </div>
+    </div>
+  );
 }
-
 
 export default Prediction;
